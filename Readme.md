@@ -1,5 +1,6 @@
 ## Quickstart
 
+0. If you don't want to build images from source, run `docker-compose pull` before any futher steps.
 1. Download .pbf dump of region you want to render (e.g. using https://download.geofabrik.de/).
    Let's take `luxembourg-latest.osm.pbf` as and example.
 2. Place downloaded `luxembourg-latest.osm.pbf` file into `data` folder.

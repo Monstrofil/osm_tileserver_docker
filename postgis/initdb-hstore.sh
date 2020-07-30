@@ -1,9 +1,9 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 set -e
+# Perform all actions as $POSTGRES_USER
+export PGUSER="$POSTGRES_USER"
 
 # Load hstore into all databases
 echo "Loading PostGIS extensions into $DB"
-"${psql[@]}" --dbname="$POSTGRES_DB" <<-'EOSQL'
-  CREATE EXTENSION IF NOT EXISTS hstore;
-EOSQL
+psql -U "${PGUSER}" -d "${POSTGRES_DB}" -c "CREATE EXTENSION IF NOT EXISTS hstore;"

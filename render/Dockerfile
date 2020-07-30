@@ -53,6 +53,11 @@ RUN cd openstreetmap-carto \
 
 COPY renderd/run.sh /
 COPY renderd/renderd.conf ${RENDERD_CONF_PATH}
+COPY renderd/requirements.txt /requirements.txt
+COPY renderd/manage.py /manage.py
+
+RUN pip3 install -r /requirements.txt
+
 ENTRYPOINT bash /run.sh
 
 

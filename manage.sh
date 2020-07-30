@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 
-if [ "$command" = "run" ]; then
+if [ "$1" = "run" ]; then
   docker-compose up --remove-orphans -d apache
-elif [ "$command" = "render" ]; then
+elif [ "$1" = "render" ]; then
   command="$1"; shift
   docker-compose run --rm -T renderd python3 /manage.py $@
 else

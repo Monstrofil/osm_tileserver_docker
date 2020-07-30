@@ -9,6 +9,26 @@
    Generated tiles are available by `http://localhost:8082/osm/{z}/{x}/{y}.png`
 
 
+### Prerendering tiles
+You can prerender given area using following command:
+```text
+/manage.sh render prerender --help
+usage: manage.py prerender [-h] [--lat_min LAT_MIN] [--lng_min LNG_MIN]
+                           [--lat_max LAT_MAX] [--lng_max LNG_MAX]
+                           [--min-zoom MIN_ZOOM] [--max-zoom MAX_ZOOM]
+
+optional arguments:
+  -h, --help           show this help message and exit
+  --lat_min LAT_MIN
+  --lng_min LNG_MIN
+  --lat_max LAT_MAX
+  --lng_max LNG_MAX
+  --min-zoom MIN_ZOOM
+  --max-zoom MAX_ZOOM
+```
+
+In order to find boundary you can use [bboxfinder](http://bboxfinder.com/).
+
 ## Recommended hardware
 TODO:
 

@@ -26,13 +26,13 @@ if __name__ == '__main__':
 
     subparsers = parser.add_subparsers(dest='command')
     render = subparsers.add_parser('prerender')
-    render.add_argument('--lat_min', default=44.3614785833)
-    render.add_argument('--lng_min', default=22.0856083513)
-    render.add_argument('--lat_max', default=52.3350745713)
-    render.add_argument('--lng_max', default=40.0807890155)
+    render.add_argument('--lat_min', default=44.3614785833, type=float)
+    render.add_argument('--lng_min', default=22.0856083513, type=float)
+    render.add_argument('--lat_max', default=52.3350745713, type=float)
+    render.add_argument('--lng_max', default=40.0807890155, type=float)
 
-    render.add_argument('--min-zoom', default=1)
-    render.add_argument('--max-zoom', default=16)
+    render.add_argument('--min-zoom', default=1, type=int)
+    render.add_argument('--max-zoom', default=16, type=int)
 
     args = parser.parse_args()
 

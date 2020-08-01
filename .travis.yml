@@ -5,3 +5,4 @@ jobs:
     - stage: build docker image
       script:
       - docker-compose build
+      - echo "${DOCKER_PASSWORD}" | docker login --username ${DOCKER_LOGIN} --password-stdin && docker-compose push

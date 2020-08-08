@@ -1,10 +1,13 @@
 import logging
+import os
 import subprocess
 
 import mercantile
 import argparse
 
 xmin, ymin, xmax, ymax = 22.0856083513, 44.3614785833, 40.0807890155, 52.3350745713
+
+DATA_DIR = '/var/import/'
 
 
 def prerender(xmin, ymin, xmax, ymax, min_zoom, max_zoom):
@@ -21,6 +24,25 @@ def prerender(xmin, ymin, xmax, ymax, min_zoom, max_zoom):
         subprocess.run(cmd, shell=True, check=True)
 
 
+def import_data_to_db(files):
+    for filename in files:
+        cmd = [
+            'osm2pgsql',
+            '-d', os.environ['POSTGRES_DB'],
+            '-U', os.environ['POSTGRES_USER'],
+            '-H', os.environ['POSTGRES_HOST'],
+            '-W',
+            '--create', '--slim', '-G', '--hstore',
+            '--tag-transform-script', '/openstreetmap-carto/openstreetmap-carto.lua',
+            '-S', '/openstreetmap-carto/openstreetmap-carto.style',
+            '--number-processes', str(os.cpu_count()),
+            os.path.join(DATA_DIR, filename)
+        ]
+        subprocess.call(
+            cmd, env={**os.environ, 'PGPASSWORD': os.environ['POSTGRES_PASSWORD']},
+            stdin=subprocess.DEVNULL)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
@@ -34,6 +56,12 @@ if __name__ == '__main__':
     render.add_argument('--min-zoom', default=1, type=int)
     render.add_argument('--max-zoom', default=16, type=int)
 
+    load = subparsers.add_parser('import')
+    load.add_argument('-f', '--file', choices=[
+        f for f in os.listdir(DATA_DIR)
+        if f not in ('.gitkeep',)
+    ], nargs='+', dest='files')
+
     args = parser.parse_args()
 
     if args.command == 'prerender':
@@ -45,5 +73,7 @@ if __name__ == '__main__':
             min_zoom=args.min_zoom,
             max_zoom=args.max_zoom
         )
+    elif args.command == 'import':
+        import_data_to_db(args.files)
     else:
         parser.print_help()

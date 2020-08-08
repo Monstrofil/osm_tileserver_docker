@@ -1,0 +1,19 @@
+version: "3.4"
+
+services:
+  renderd:
+    image: monstrofil/osm_renderd_carto_${CARTO_STYLE_TAG}
+    build:
+      context: render
+      target: renderd
+
+  apache:
+    image: monstrofil/osm_apache_mod_tile
+    build:
+      context: render
+      target: apache
+
+  postgis:
+    image: monstrofil/osm_postgis_hstore
+    build:
+      context: postgis

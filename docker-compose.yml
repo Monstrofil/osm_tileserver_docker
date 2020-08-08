@@ -6,38 +6,21 @@ x-postgres-env-config: &x-postgres-env-config
   POSTGRES_HOST: "${POSTGRES_HOST}"
 
 services:
-  manage:
-    build:
-      context: manage
-    image: monstrofil/osm_db_manage_carto_${CARTO_STYLE_TAG}
-    restart: on-failure
-    entrypoint: wait_for postgis:5432 -- /manage.py
-    depends_on:
-      - postgis
-    environment:
-      <<: *x-postgres-env-config
-    volumes:
-      - ./data:/var/import:ro
-      - ./wait_for.sh:/bin/wait_for:ro
 
   renderd:
-    build:
-      context: render
-      target: renderd
     image: monstrofil/osm_renderd_carto_${CARTO_STYLE_TAG}
     restart: on-failure
     environment:
       <<: *x-postgres-env-config
       PGPASSWORD: ${POSTGRES_PASSWORD}
       OSM2PGSQL_THREADS: 8
-    entrypoint: bash /run.sh
+    entrypoint: /run.sh
     volumes:
       - renderd:/var/run/renderd
+      - ./data:/var/import:ro
+      - ./wait_for.sh:/bin/wait_for:ro
 
   apache:
-    build:
-      context: render
-      target: apache
     image: monstrofil/osm_apache_mod_tile
     restart: on-failure
     ports:
@@ -48,8 +31,6 @@ services:
       - renderd:/var/run/renderd
 
   postgis:
-    build:
-      context: postgis
     image: monstrofil/osm_postgis_hstore
     restart: unless-stopped
     environment:

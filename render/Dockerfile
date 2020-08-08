@@ -51,6 +51,18 @@ RUN cd openstreetmap-carto \
   && ls data \
   && python3 scripts/get-shapefiles.py --no-download -u
 
+RUN apt install -y make cmake g++ libboost-dev libboost-system-dev \
+  libboost-filesystem-dev libexpat1-dev zlib1g-dev \
+  libbz2-dev libpq-dev libproj-dev lua5.3 liblua5.3-dev git python3 netcat
+
+RUN git clone git://github.com/openstreetmap/osm2pgsql.git
+RUN cd osm2pgsql \
+ && mkdir build \
+ && cd build \
+ && cmake .. \
+ && make \
+ && make install
+
 COPY renderd/run.sh /
 COPY renderd/renderd.conf ${RENDERD_CONF_PATH}
 COPY renderd/requirements.txt /requirements.txt
@@ -74,4 +86,6 @@ RUN a2dissite 000-default \
  && a2enconf mod_tile \
  && a2ensite 000-tile-server
 
-ENTRYPOINT bash /run.sh
+COPY renderd/wait_for.sh /bin/wait_for
+
+ENTRYPOINT /run.sh

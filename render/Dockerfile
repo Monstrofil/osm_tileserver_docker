@@ -67,6 +67,7 @@ COPY renderd/run.sh /
 COPY renderd/renderd.conf ${RENDERD_CONF_PATH}
 COPY renderd/requirements.txt /requirements.txt
 COPY renderd/manage.py /manage.py
+COPY renderd/wait_for.sh /bin/wait_for
 
 RUN pip3 install -r /requirements.txt
 
@@ -85,7 +86,5 @@ RUN a2dissite 000-default \
  && rm -f /etc/apache2/sites-available/000-default.conf \
  && a2enconf mod_tile \
  && a2ensite 000-tile-server
-
-COPY renderd/wait_for.sh /bin/wait_for
 
 ENTRYPOINT /run.sh

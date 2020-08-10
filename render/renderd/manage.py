@@ -60,7 +60,7 @@ if __name__ == '__main__':
     load.add_argument('-f', '--file', choices=[
         f for f in os.listdir(DATA_DIR)
         if f not in ('.gitkeep',)
-    ], nargs='+', dest='files')
+    ], nargs='+', dest='files', required=True)
 
     args = parser.parse_args()
 

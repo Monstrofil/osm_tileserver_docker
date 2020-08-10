@@ -11,16 +11,18 @@ xmin, ymin, xmax, ymax = 22.0856083513, 44.3614785833, 40.0807890155, 52.3350745
 DATA_DIR = '/var/import/'
 
 
-def prerender(xmin, ymin, xmax, ymax, min_zoom, max_zoom):
+def prerender(xmin, ymin, xmax, ymax, min_zoom, max_zoom, force):
     for z in range(min_zoom, max_zoom):
         min_t = mercantile.tile(xmin, ymin, z)
         max_t = mercantile.tile(xmax, ymax, z)
 
-        cmd = f'render_list -m ajt -a -z {z} -Z {z} -n 10 ' \
+        cmd = f'render_list -a -z {z} -Z {z} -n 10 ' \
               f'--min-x={min_t.x} --min-y={max_t.y} ' \
               f'--max-x={max_t.x} --max-y={min_t.y} ' \
               f'--tile-dir /var/run/renderd/mod_tile ' \
               f'-m osm'
+        if force:
+            cmd += ' --force'
         logging.info('Running `%s`', cmd)
         subprocess.run(cmd, shell=True, check=True)
 
@@ -56,6 +58,7 @@ if __name__ == '__main__':
 
     render.add_argument('--min-zoom', default=1, type=int)
     render.add_argument('--max-zoom', default=16, type=int)
+    render.add_argument('-f', '--force', default=False, action='store_true')
 
     load = subparsers.add_parser('import')
     load.add_argument('-f', '--file', choices=[
@@ -72,7 +75,8 @@ if __name__ == '__main__':
             xmax=args.lng_max,
             ymax=args.lat_max,
             min_zoom=args.min_zoom,
-            max_zoom=args.max_zoom
+            max_zoom=args.max_zoom,
+            force=args.force
         )
     elif args.command == 'import':
         import_data_to_db(args.files)

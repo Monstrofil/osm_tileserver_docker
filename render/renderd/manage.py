@@ -17,8 +17,8 @@ def prerender(xmin, ymin, xmax, ymax, min_zoom, max_zoom, force):
         max_t = mercantile.tile(xmax, ymax, z)
 
         cmd = f'render_list -a -z {z} -Z {z} -n 10 ' \
-              f'--min-x={min_t.x} --min-y={max_t.y + 1} ' \
-              f'--max-x={max_t.x + 1} --max-y={min_t.y} ' \
+              f'--min-x={min_t.x} --min-y={max_t.y} ' \
+              f'--max-x={max_t.x} --max-y={min_t.y} ' \
               f'--tile-dir /var/run/renderd/mod_tile ' \
               f'-m osm'
         if force:
@@ -47,14 +47,16 @@ def import_data_to_db(files):
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
+
     parser = argparse.ArgumentParser()
 
     subparsers = parser.add_subparsers(dest='command')
     render = subparsers.add_parser('prerender')
-    render.add_argument('--lat_min', default=44.3614785833, type=float)
-    render.add_argument('--lng_min', default=22.0856083513, type=float)
-    render.add_argument('--lat_max', default=52.3350745713, type=float)
-    render.add_argument('--lng_max', default=40.0807890155, type=float)
+    render.add_argument('--lat_min', default=40.010787, type=float)
+    render.add_argument('--lng_min', default=16.303711, type=float)
+    render.add_argument('--lat_max', default=56.704506, type=float)
+    render.add_argument('--lng_max', default=46.845703, type=float)
 
     render.add_argument('--min-zoom', default=1, type=int)
     render.add_argument('--max-zoom', default=16, type=int)

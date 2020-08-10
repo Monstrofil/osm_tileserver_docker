@@ -17,8 +17,8 @@ def prerender(xmin, ymin, xmax, ymax, min_zoom, max_zoom, force):
         max_t = mercantile.tile(xmax, ymax, z)
 
         cmd = f'render_list -a -z {z} -Z {z} -n 10 ' \
-              f'--min-x={min_t.x} --min-y={max_t.y} ' \
-              f'--max-x={max_t.x} --max-y={min_t.y} ' \
+              f'--min-x={min_t.x} --min-y={max_t.y + 1} ' \
+              f'--max-x={max_t.x + 1} --max-y={min_t.y} ' \
               f'--tile-dir /var/run/renderd/mod_tile ' \
               f'-m osm'
         if force:

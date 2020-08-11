@@ -47,7 +47,6 @@ COPY renderd/prepare_style.py .
 RUN cd openstreetmap-carto \
   && python3 /prepare_style.py -f project.mml \
   && carto project.mml > mapnik.xml \
-  && ls data \
   && python3 scripts/get-shapefiles.py --no-download -u
 
 RUN apt install -y make cmake g++ libboost-dev libboost-system-dev \

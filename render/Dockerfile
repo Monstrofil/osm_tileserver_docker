@@ -44,7 +44,6 @@ ENV RENDERD_CONF_PATH=/usr/local/etc/renderd.conf
 RUN git clone -b ${CARTO_STYLE_TAG} --depth=1 git://github.com/gravitystorm/openstreetmap-carto.git
 
 COPY renderd/prepare_style.py .
-COPY ne_110m_admin_0_boundary_lines_land.zip openstreetmap-carto/data/ne_110m_admin_0_boundary_lines_land.zip
 RUN cd openstreetmap-carto \
   && python3 /prepare_style.py -f project.mml \
   && carto project.mml > mapnik.xml \

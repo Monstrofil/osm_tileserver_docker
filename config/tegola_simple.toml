@@ -1,0 +1,116 @@
+[webserver]
+port = ":3002"
+  [webserver.headers]
+  # redefine default cors origin
+  Access-Control-Allow-Origin = "*"
+
+# [cache]
+# type="file"             # cache type
+# basepath="/persistent/tegola"  # cache specific config
+# max_zoom = 10
+
+[[mvt_providers]]
+name = "openmaptiles"
+type = "postgis"
+host = "postgis"
+port = 5432
+database = "dev"
+user = "dev"
+password = "dev"
+srid = 3857
+
+[[maps]]
+name = "openmaptiles"
+
+[[maps.layers]]
+provider_layer = "mvt_openmaptiles.transportation"
+min_zoom = 0
+max_zoom = 14
+
+[[maps.layers]]
+provider_layer = "mvt_openmaptiles.foot_cycleway"
+min_zoom = 0
+max_zoom = 14
+
+[[maps.layers]]
+provider_layer = "mvt_openmaptiles.cycleway_lanes"
+min_zoom = 0
+max_zoom = 14
+
+[[mvt_providers.layers]]
+name = "transportation"
+geometry_fieldname = "geometry"
+geometry_type = "linestring"
+id_fieldname = "osm_id"
+sql = """
+SELECT
+  ST_AsMVTGeom(geometry, !BBOX!) AS geometry, osm_id, construction, highway, proposed
+FROM
+ (
+   SELECT geometry, osm_id, construction, highway, proposed FROM osm_cycleways WHERE !ZOOM! >= 13
+   UNION ALL
+   SELECT geometry, osm_id, construction, highway, proposed FROM osm_cycleways_z_13 WHERE !ZOOM! >= 12 AND !ZOOM! < 13
+   UNION ALL
+   SELECT geometry, osm_id, construction, highway, proposed FROM osm_cycleways_z_10 WHERE !ZOOM! >= 10 AND !ZOOM! < 12
+   UNION ALL
+   SELECT geometry, osm_id, construction, highway, proposed FROM osm_cycleways_z_8 WHERE !ZOOM! >= 8 AND !ZOOM! < 10
+   UNION ALL
+   SELECT geometry, osm_id, construction, highway, proposed FROM osm_cycleways_z_6 WHERE !ZOOM! >= 4 AND !ZOOM! < 8
+   UNION ALL
+   SELECT geometry, osm_id, construction, highway, proposed FROM osm_cycleways_z_4 WHERE !ZOOM! <= 5
+ ) AS zoom_levels
+ WHERE ST_Length(geometry) >= ZRes(!ZOOM!) AND geometry && !BBOX!
+"""
+
+
+[[mvt_providers.layers]]
+name = "foot_cycleway"
+geometry_fieldname = "geometry"
+geometry_type = "linestring"
+id_fieldname = "osm_id"
+sql = """
+SELECT
+  ST_AsMVTGeom(geometry, !BBOX!) AS geometry, osm_id, construction, proposed, bicycle
+FROM
+ (
+   SELECT geometry, osm_id, construction, proposed, bicycle FROM osm_cycleways_foot_shared WHERE !ZOOM! >= 13
+   UNION ALL
+   SELECT geometry, osm_id, construction, proposed, bicycle FROM osm_cycleways_foot_shared_z_13 WHERE !ZOOM! >= 12 AND !ZOOM! < 13
+   UNION ALL
+   SELECT geometry, osm_id, construction, proposed, bicycle FROM osm_cycleways_foot_shared_z_10 WHERE !ZOOM! >= 10 AND !ZOOM! < 12
+   UNION ALL
+   SELECT geometry, osm_id, construction, proposed, bicycle FROM osm_cycleways_foot_shared_z_8 WHERE !ZOOM! >= 8 AND !ZOOM! < 10
+   UNION ALL
+   SELECT geometry, osm_id, construction, proposed, bicycle FROM osm_cycleways_foot_shared_z_6 WHERE !ZOOM! >= 4 AND !ZOOM! < 8
+   UNION ALL
+   SELECT geometry, osm_id, construction, proposed, bicycle FROM osm_cycleways_foot_shared_z_4 WHERE !ZOOM! <= 5
+ ) AS zoom_levels
+ WHERE ST_Length(geometry) >= ZRes(!ZOOM!) AND geometry && !BBOX!
+"""
+# sql = "SELECT ST_AsMVTGeom(geometry, !BBOX!) AS geometry, osm_id AS id_field, highway, construction, bicycle FROM osm_cycleways_foot_shared WHERE geometry && !BBOX! LIMIT 0"
+
+[[mvt_providers.layers]]
+name = "cycleway_lanes"
+geometry_fieldname = "geometry"
+geometry_type = "linestring"
+id_fieldname = "osm_id"
+sql = """
+SELECT
+  ST_AsMVTGeom(geometry, !BBOX!) AS geometry, osm_id, highway, construction, cycleway, cycleway_right, cycleway_left, cycleway_both
+FROM
+ (
+   SELECT geometry, osm_id, highway, construction, cycleway, cycleway_right, cycleway_left, cycleway_both FROM osm_cycleway_lanes WHERE !ZOOM! >= 13
+   UNION ALL
+   SELECT geometry, osm_id, highway, construction, cycleway, cycleway_right, cycleway_left, cycleway_both FROM osm_cycleway_lanes_z_13 WHERE !ZOOM! >= 12 AND !ZOOM! < 13
+   UNION ALL
+   SELECT geometry, osm_id, highway, construction, cycleway, cycleway_right, cycleway_left, cycleway_both FROM osm_cycleway_lanes_z_10 WHERE !ZOOM! >= 10 AND !ZOOM! < 12
+   UNION ALL
+   SELECT geometry, osm_id, highway, construction, cycleway, cycleway_right, cycleway_left, cycleway_both FROM osm_cycleway_lanes_z_8 WHERE !ZOOM! >= 8 AND !ZOOM! < 10
+   UNION ALL
+   SELECT geometry, osm_id, highway, construction, cycleway, cycleway_right, cycleway_left, cycleway_both FROM osm_cycleway_lanes_z_6 WHERE !ZOOM! >= 4 AND !ZOOM! < 8
+   UNION ALL
+   SELECT geometry, osm_id, highway, construction, cycleway, cycleway_right, cycleway_left, cycleway_both FROM osm_cycleway_lanes_z_4 WHERE !ZOOM! <= 5
+ ) AS zoom_levels
+ WHERE ST_Length(geometry) >= ZRes(!ZOOM!) AND geometry && !BBOX!
+"""
+# sql = "SELECT ST_AsMVTGeom(geometry, !BBOX!) AS geometry, osm_id AS id_field, highway, construction, cycleway, cycleway_right, cycleway_left, cycleway_both FROM osm_cycleway_lanes WHERE geometry && !BBOX! LIMIT 0"

@@ -1,0 +1,70 @@
+
+<mgl-map
+  [style]="'assets/cycleways.json'"
+  [zoom]="[13]"
+  [center]="[35.0409, 48.4755]"
+  (load)="onMapLoad($event)"
+>
+  <mgl-control
+    mglNavigation [position]="'bottom-right'">
+  </mgl-control>
+  <mgl-control
+    mglScale [position]="'bottom-left'">
+  </mgl-control>
+  <mgl-control
+    [position]="'bottom-left'">
+    <div class="legend" *ngIf="legend">
+      Спеціальні позначення:
+      <table>
+        {{legend }}
+        <tr *ngFor="let layer of legend">
+          <td>
+            <svg class="legend-example" viewBox="0 0 60 10" xmlns="http://www.w3.org/2000/svg">
+              <!-- No dashes nor gaps -->
+              <line transform="scale(5,1)" x1="0" y1="1" x2="60" y2="1" stroke-width="30" stroke="black"  style="
+                stroke-dasharray: {{layer.dasharray}};
+                stroke: {{layer.color}};
+               "  />
+            </svg>
+          </td>
+          <td>
+            {{layer.title}}
+          </td>
+        </tr>
+      </table>
+
+      Загальні позначення:
+      <table>
+        <tr>
+          <td>
+            <svg class="legend-example" viewBox="0 0 60 10" xmlns="http://www.w3.org/2000/svg">
+              <line transform="scale(5,1)" x1="0" y1="1" x2="60" y2="1" stroke-width="30" stroke="black"  style="
+                stroke-dasharray: 1, 1;
+                stroke: rgb(38,85,1);
+               "  />
+            </svg>
+          </td>
+          <td>
+            Позначення об'єктів в процесі будівництва
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <svg class="legend-example" viewBox="0 0 60 10" xmlns="http://www.w3.org/2000/svg">
+              <line transform="scale(5,1)" x1="0" y1="1" x2="60" y2="1" stroke-width="30" stroke="black"  style="
+                stroke-dasharray: 1, 3;
+                stop-opacity: 0.5;
+                stroke: rgb(38,85,1);
+               "  />
+            </svg>
+          </td>
+          <td>
+            Позначення запланованих об'єктів
+          </td>
+        </tr>
+      </table>
+
+    </div>
+  </mgl-control>
+</mgl-map>
+<router-outlet></router-outlet>

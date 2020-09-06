@@ -7,38 +7,52 @@ x-postgres-env-config: &x-postgres-env-config
 
 services:
 
-  renderd:
-    image: monstrofil/osm_renderd_carto_${CARTO_STYLE_TAG}
-    restart: on-failure
-    environment:
-      <<: *x-postgres-env-config
-      PGPASSWORD: ${POSTGRES_PASSWORD}
-      OSM2PGSQL_THREADS: 8
-    entrypoint: /run.sh
-    depends_on:
-      - postgis
-    volumes:
-      - renderd:/var/run/renderd
-      - ./data:/var/import:ro
-
-  apache:
-    image: monstrofil/osm_apache_mod_tile
-    restart: on-failure
-    ports:
-      - ${APACHE_EXPOSED_PORT:-8082}:80
-    depends_on:
-      - renderd
-    volumes:
-      - renderd:/var/run/renderd
-
   postgis:
-    image: monstrofil/osm_postgis_hstore
+    image: monstrofil/postgis_hstore
     restart: unless-stopped
+    build:
+      context: postgis
     environment:
       <<: *x-postgres-env-config
     volumes:
       - pg_renderd_data:/var/lib/postgresql/data/
+    depends_on:
+      - tegola
+
+  tegola:
+    build:
+      context: vector
+    restart: unless-stopped
+    entrypoint: /bin/wait_for postgis:5432 -- /opt/tegola serve --config /opt/config.toml
+    volumes:
+      - ./config/tegola_simple.toml:/opt/config.toml:ro
+      - ./wait_for.sh:/bin/wait_for:ro
+      - tegola:/persistent/
+    ports:
+    - 8090:3002
+
+  imposm:
+    build:
+      context: imposm
+    environment:
+      <<: *x-postgres-env-config
+    entrypoint: /bin/wait_for postgis:5432 --
+    depends_on:
+      - postgis
+    volumes:
+      - diffdir:/diffdir
+      - ./wait_for.sh:/bin/wait_for:ro
+      - ./data:/import:ro
+      - ./config:/config:ro
+
+  web:
+    build:
+      context: web
+      target: nginx
+    ports:
+    - 6666:80
 
 volumes:
   pg_renderd_data:
-  renderd:
+  diffdir:
+  tegola:

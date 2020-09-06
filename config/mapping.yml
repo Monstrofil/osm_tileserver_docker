@@ -1,0 +1,155 @@
+generalized_tables:
+  cycleways_z_13:
+    source: cycleways
+    tolerance: 50
+  cycleways_z_10:
+    source: cycleways
+    tolerance: 50.0
+  cycleways_z_8:
+    source: cycleways
+    tolerance: 400.0
+  cycleways_z_6:
+    source: cycleways
+    tolerance: 1500.0
+  cycleways_z_4:
+    source: cycleways
+    tolerance: 8000.0
+
+  cycleways_foot_shared_z_13:
+    source: cycleways_foot_shared
+    tolerance: 50
+  cycleways_foot_shared_z_10:
+    source: cycleways_foot_shared
+    tolerance: 50.0
+  cycleways_foot_shared_z_8:
+    source: cycleways_foot_shared
+    tolerance: 400.0
+  cycleways_foot_shared_z_6:
+    source: cycleways_foot_shared
+    tolerance: 1500.0
+  cycleways_foot_shared_z_4:
+    source: cycleways_foot_shared
+    tolerance: 8000.0
+
+  cycleway_lanes_z_13:
+    source: cycleway_lanes
+    tolerance: 50
+  cycleway_lanes_z_10:
+    source: cycleway_lanes
+    tolerance: 50.0
+  cycleway_lanes_z_8:
+    source: cycleway_lanes
+    tolerance: 400.0
+  cycleway_lanes_z_6:
+    source: cycleway_lanes
+    tolerance: 1500.0
+  cycleway_lanes_z_4:
+    source: cycleway_lanes
+    tolerance: 8000.0
+
+tables:
+
+  cities:
+    type: polygon
+    columns:
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - name: name
+        type: string
+    mapping:
+      place:
+       - city
+
+  cycleways:
+    type: linestring
+    _resolve_wikidata: false
+    columns:
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - name: highway
+        key: highway
+        type: string
+      - name: construction
+        key: construction
+        type: string
+      - name: proposed
+        key: proposed
+        type: string
+    mapping:
+      highway:
+        - cycleway
+      construction:
+        - cycleway
+      proposed:
+        - cycleway
+      "cycleway:right": ['track']
+      "cycleway:left": ['track']
+      "cycleway": ['track']
+      "cycleway:both": ['track']
+
+  cycleways_foot_shared:
+    type: linestring
+    _resolve_wikidata: false
+    columns:
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - name: highway
+        key: highway
+        type: string
+      - name: construction
+        key: construction
+        type: string
+      - name: proposed
+        key: proposed
+        type: string
+      - name: bicycle
+        key: bicycle
+        type: string
+    filters:
+      require:
+        bicycle: ['designated']
+    mapping:
+      highway:
+        - path
+      construction:
+        - path
+      proposed:
+        - path
+
+  cycleway_lanes:
+    type: linestring
+    _resolve_wikidata: false
+    columns:
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - name: highway
+        key: highway
+        type: string
+      - name: construction
+        key: construction
+        type: string
+      - name: cycleway
+        key: "cycleway"
+        type: string
+      - name: cycleway_right
+        key: "cycleway:right"
+        type: string
+      - name: cycleway_left
+        key: "cycleway:left"
+        type: string
+      - name: cycleway_both
+        key: "cycleway:both"
+        type: string
+    mapping:
+      "cycleway:right": ['lane']
+      "cycleway:left": ['lane']
+      "cycleway": ['lane']
+      "cycleway:both": ['lane']

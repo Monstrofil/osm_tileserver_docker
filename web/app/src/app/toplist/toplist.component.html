@@ -1,0 +1,58 @@
+<div class="container">
+  Топ веломіст
+  <table>
+  <thead>
+    <tr>
+      <td>#</td>
+      <td (click)="setOrder('name')">
+        Місто
+        <img src="/assets/icons/down-arrow.svg"
+             class="sort_button"
+             style="transform: rotate({{ (direction == -1 ? '0': '-180') }}deg);"
+             *ngIf="order == 'name'"
+        >
+      </td>
+      <td (click)="setOrder('length.cycleway.total')">
+        Велодоріжок (км)
+        <img src="/assets/icons/down-arrow.svg"
+             class="sort_button"
+             style="transform: rotate({{ (direction == -1 ? '0': '-180') }}deg);"
+             *ngIf="order == 'length.cycleway.total'"
+        >
+      </td>
+      <td (click)="setOrder('length.cyclefootway.total')">
+        Велопішохідні (км)
+        <img src="/assets/icons/down-arrow.svg"
+             class="sort_button"
+             style="transform: rotate({{ (direction == -1 ? '0': '-180') }}deg);"
+             *ngIf="order == 'length.cyclefootway.total'"
+        >
+      </td>
+      <td (click)="setOrder('length.cyclelane.total')">
+        Велосмуг (км)
+        <img src="/assets/icons/down-arrow.svg"
+             class="sort_button"
+             style="transform: rotate({{ (direction == -1 ? '0': '-180') }}deg);"
+             *ngIf="order == 'length.cyclelane.total'"
+        >
+      </td>
+      <td (click)="setOrder('length.total')">
+        Разом (км)
+        <img src="/assets/icons/down-arrow.svg"
+             class="sort_button"
+             style="transform: rotate({{ (direction == -1 ? '0': '-180') }}deg);"
+             *ngIf="order == 'length.total'"
+        >
+      </td>
+    </tr>
+  </thead>
+  <tr *ngFor="let item of topList | orderBy: (direction == -1 ? '-': '') + order; index as i">
+    <td>{{i + 1}}</td>
+    <td>{{item.name}}</td>
+    <td>{{item.length.cycleway.total / 1000 | round: 2}}</td>
+    <td>{{item.length.cyclefootway.total / 1000 | round: 2}}</td>
+    <td>{{item.length.cyclelane.total / 1000 | round: 2}}</td>
+    <td>{{item.length.total / 1000 | round: 2}}</td>
+  </tr>
+  </table>
+</div>

@@ -27,7 +27,7 @@
     },
     "1fowhdku8": {
       "type": "vector",
-      "url": "https://osm.monstrofil.xyz/capabilities/openmaptiles.json"
+      "url": "/capabilities/openmaptiles.json"
     }
   },
   "sprite": "https://openmaptiles.github.io/positron-gl-style/sprite",
@@ -752,7 +752,7 @@
       "source": "openmaptiles",
       "source-layer": "boundary",
       "minzoom": 5,
-      "filter": ["==", "admin_level", 2],
+      "filter": ["all", ["==", "admin_level", 2], ["!=", "claimed_by", "RU"]],
       "layout": {"line-cap": "round", "line-join": "round"},
       "paint": {
         "line-blur": {"base": 1, "stops": [[0, 0.4], [22, 4]]},
@@ -1102,9 +1102,10 @@
         "visibility": "visible"
       },
       "paint": {
-        "line-color": "rgba(138, 157, 255, 0.5)",
+        "line-color": "rgba(9, 179, 205, 1)",
         "line-width": {"stops": [[10, 3], [20, 10]]},
-        "line-dasharray": [1, 2]
+        "line-dasharray": [1, 2],
+        "line-opacity": 0.5
       }
     },
     {
@@ -1119,7 +1120,7 @@
         "visibility": "visible"
       },
       "paint": {
-        "line-color": "rgba(138, 157, 255, 1)",
+        "line-color": "rgba(9, 179, 205, 1)",
         "line-width": {"stops": [[10, 3], [20, 10]]},
         "line-dasharray": [1, 1]
       }
@@ -1137,7 +1138,7 @@
         "visibility": "visible"
       },
       "paint": {
-        "line-color": "rgba(107, 119, 255, 1)",
+        "line-color": "rgba(9, 179, 205, 1)",
         "line-width": {"stops": [[10, 3], [20, 10]]}
       }
     },
@@ -1155,7 +1156,7 @@
       },
       "paint": {
         "line-width": {"stops": [[10, 3], [20, 12]]},
-        "line-color": "rgba(218, 208, 147, 1)"
+        "line-color": "rgba(255, 170, 0, 1)"
       }
     },
     {
@@ -1171,9 +1172,9 @@
       },
       "paint": {
         "line-width": {"stops": [[10, 3], [20, 12]]},
-        "line-color": "rgba(218, 208, 147, 0.5)",
+        "line-color": "rgba(255, 170, 0, 1)",
         "line-dasharray": [1, 2],
-        "line-opacity": 1
+        "line-opacity": 0.5
       }
     },
     {
@@ -1189,7 +1190,7 @@
       },
       "paint": {
         "line-width": {"stops": [[10, 3], [20, 12]]},
-        "line-color": "rgba(218, 208, 147, 1)",
+        "line-color": "rgba(255, 170, 0, 1)",
         "line-dasharray": [1, 1],
         "line-opacity": 1
       }
@@ -1213,7 +1214,7 @@
       },
       "paint": {
         "line-width": {"stops": [[10, 3], [20, 10]]},
-        "line-color": "rgba(127, 168, 251, 1)",
+        "line-color": "rgba(188, 0, 0, 1)",
         "line-offset": {"stops": [[10, 2], [20, 10]]},
         "line-opacity": [
           "case",
@@ -1242,7 +1243,7 @@
       },
       "paint": {
         "line-width": {"stops": [[10, 3], [20, 10]]},
-        "line-color": "rgba(127, 168, 251, 1)",
+        "line-color": "rgba(188, 0, 0, 1)",
         "line-offset": {"stops": [[10, -2], [20, -10]]},
         "line-opacity": [
           "case",

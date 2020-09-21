@@ -36,7 +36,7 @@ services:
       context: imposm
     environment:
       <<: *x-postgres-env-config
-    entrypoint: /bin/wait_for postgis:5432 --
+    command: /bin/wait_for postgis:5432 -- manage update
     depends_on:
       - postgis
     volumes:
@@ -51,6 +51,16 @@ services:
       target: nginx
     ports:
     - 6666:80
+
+  backend:
+    build:
+      context: backend
+    volumes:
+    - ./backend/app:/app:ro
+    environment:
+      <<: *x-postgres-env-config
+    ports:
+    - 6667:80
 
 volumes:
   pg_renderd_data:

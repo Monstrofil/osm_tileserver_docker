@@ -21,7 +21,7 @@ COPY app/ ./
 RUN ls -la
 
 RUN npm run-script ng version
-RUN npm run-script build --production  --aot
+RUN npm run-script build --production
 
 FROM nginx:latest AS nginx
 COPY --from=builder /application/dist/web/ /usr/share/nginx/html

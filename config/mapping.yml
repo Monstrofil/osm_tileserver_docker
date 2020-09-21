@@ -49,7 +49,7 @@ generalized_tables:
 
 tables:
 
-  cities:
+  administrative:
     type: polygon
     columns:
       - name: osm_id
@@ -58,10 +58,13 @@ tables:
         type: geometry
       - name: name
         type: string
+        key: "name"
+      - name: population
+        type: integer
+        key: "population"
     mapping:
       place:
-       - city
-
+        - city
   cycleways:
     type: linestring
     _resolve_wikidata: false
@@ -117,10 +120,16 @@ tables:
     mapping:
       highway:
         - path
+        - footway
+        - pedestrian
       construction:
         - path
+        - footway
+        - pedestrian
       proposed:
         - path
+        - footway
+        - pedestrian
 
   cycleway_lanes:
     type: linestring
